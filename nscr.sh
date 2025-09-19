@@ -106,11 +106,13 @@ update_installed_packages() {
 
 check_commands
 
-read -p "[NSCR] (1) Install new package, (2) Update installed packages: " action_choice
+if [ -f "$HOME/.local/share/nscrInstalledPackages.txt" ]; then
+    read -p "[NSCR] (1) Install new package, (2) Update installed packages: " action_choice
 
-if [ "$action_choice" == "2" ]; then
-    update_installed_packages
-    exit 0
+    if [ "$action_choice" == "2" ]; then
+        update_installed_packages
+        exit 0
+    fi
 fi
 
 read -p "[NSCR] Enter the package name: " PKG
