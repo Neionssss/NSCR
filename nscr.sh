@@ -17,12 +17,14 @@ check_commands() {
 
 get_current_version() {
     local pkg=$1
-    if pacman -Qi "$pkg" &>/dev/null; then
-        current_version=$(pacman -Qi "$pkg" | awk '/^Version/ {print $3}')
-        echo "$current_version"
-    else
-        echo ""
-    fi
+    local current_version
+
+    current_version=$(pacman -Qi "$pkg" 2>/dev/null | awk -v pkg="$pkg" '
+        $1 == "Name" && $3 == pkg { valid=1 }
+        valid && $1 == "Version" { print $3; exit }
+    ')
+
+    echo "$current_version"
 }
 
 clone_and_build() {
